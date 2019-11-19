@@ -9,7 +9,6 @@ typedef struct node
     int data;
 
     struct node *next;
-
 }Linklist;
 
 
@@ -26,6 +25,7 @@ Linklist *creat()
 
     return phead;
 
+    printf("11111");
 }
 
 
