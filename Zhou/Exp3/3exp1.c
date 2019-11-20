@@ -1,6 +1,4 @@
-/*:wq
-
-*  直接插入： charu函数
+/*
 
 *  选择：  xuanzepai函数 
 
@@ -10,8 +8,6 @@
 
 *  希尔：shell 函数 
 
-*  归并：GB 函数 
-
 */ 
 
 # include <stdio.h>  
@@ -20,17 +16,20 @@
 
 # include <time.h>
 
-# define N 500
+# define N 100
 
 # define SR 1001
+
+#define random_1(a, b) ((rand()%(b - a)) + a)
+
+#define random_2(a, b) ((rand()%(b - a + 1)) + a)
+
 
 int A[N],B[N],C[N],D[N],E[N],F[N],G[N];
 
 int a,aa,b,bb,d,dd,e,ee,f,ff,num;   
 
 long long c,cc;
-
-void charu(int A[],int n);
 
 void xuanzepai(int A[],int n);
 
@@ -40,37 +39,9 @@ void Quicksort(int A[],int L,int R);
 
 void shell(int A[],int n);
 
-void GBPX(int S[],int L,int R,int T[]);
-
-int GB(int S[],int L,int M,int R,int T[]);
-
 int gainint(int *p,int min,int max);
 
 int change(int *a,int *b);
-
-void charu(int A[],int n)
-
-{  
-
-    int i,j,temp;  
-
-    for (i=1,a++;i<n;i++,a++)  
-
-        if (A[i]<A[i-1])  
-
-        {   
-
-            temp=A[i];
-
-            for(a++,aa++,j=i-1;j>=0&& A[j]>temp;j--,a++,aa++)
-
-            	A[j+1]=A[j];
-
-            A[j+1]=temp;
-
-        }  
-
-}  
 
 void xuanzepai(int A[],int n) 
 
@@ -219,8 +190,27 @@ int change(int *a,int *b)
     return 3;
 
 }  
+int main(int argc, char **argv)
 
-int main(){    
+{
+	    srand((int)time(NULL));                                               
+
+	        int arr[20];
+
+		for(int i = 0; i < 20; i++){
+
+                arr[i] = random_1(1, 100);
+	       	}
+		for(int i = 0; i < 20;i++){
+	        printf("%d\t", arr[i]);
+
+		if(i==9)
+
+		printf("\n");
+
+			    }
+
+	        printf("\n");
 
     int i,t; 
 
@@ -230,31 +220,17 @@ int main(){
 
     gainint(&num,2,N);
 
-    for(i=0;i<num;i++)
+    for(i=0;i<num;i++)   printf("%d\t",A[i]=B[i]=C[i]=D[i]=E[i]=F[i]=rand()%SR);
 
-     printf("%d\t",A[i]=B[i]=C[i]=D[i]=E[i]=F[i]=rand()%SR);
-
-    charu(A,num);
-
-    printf("\n直接插入排序:\n比较次数:%10d\t移动次数%10d\n\n",a,aa);
-
-    xuanzepai(B,num);
-
-    printf("简单选择排序:\n比较次数:%10d\t移动次数%10d\n\n",b+bb/3,bb);
+    xuanzepai(B,num);    printf("简单选择排序:\n比较次数:%10d\t移动次数%10d\n\n",b+bb/3,bb);
 
     c=(num-1)*num/2;
 
-    maopao(C,num); 
+    maopao(C,num);       printf("冒泡排序:\n比较次数:%10lld\t移动次数%10lld\n\n",c+cc/3,cc);
 
-    printf("冒泡排序:\n比较次数:%10lld\t移动次数%10lld\n\n",c+cc/3,cc);
+    Quicksort(D,0,num-1);printf("快速排序:\n比较次数:%10d\t移动次数%10d\n\n",d+dd/3,dd);
 
-    Quicksort(D,0,num-1);
-
-    printf("快速排序:\n比较次数:%10d\t移动次数%10d\n\n",d+dd/3,dd);
-
-    shell(E,num);
-
-    printf("希尔排序:\n比较次数:%10d\t移动次数%10d\n\n",e+ee/3,ee);
+    shell(E,num);       printf("希尔排序:\n比较次数:%10d\t移动次数%10d\n\n",e+ee/3,ee);
 
 	getchar(); 
 
