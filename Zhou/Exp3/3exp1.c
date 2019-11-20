@@ -181,68 +181,8 @@ void shell(int A[],int n)
 	}
 
 }
-
-int GB(int S[],int L,int M,int R,int T[])
-
-{  
-
-    int i=M,j=R,k=0,count=0;  
-
-    while(i>=L&&j>M)  
-
-    {  
-
-        f++;
-
-        if(S[i]>S[j])  
-
-        {  
-
-            T[k++]=S[i--];
-
-              
-
-        }  
-
-        else  T[k++]=S[j--];   
-
-        count++;
-
-    }  
-
     
 
-    while(i>=L){f++;T[k++]=S[i--];}  
-
-    while(j>M){f++;T[k++]=S[j--];}     
-
-    for(i=0,f+=k;i<k;i++)  S[R-i]=T[i];
-
-    return count;  
-
-}  
-
-void GBPX(int S[],int L,int R,int T[])  
-
-{  
-
-    int M;    
-
-    if(L<R)  
-
-    {  
-
-        M=(L+R)>>1;  
-
-        GBPX(S,L,M,T);  
-
-        GBPX(S,M+1,R,T);
-
-        ff+=GB(S,L,M,R,T);  
-
-    }     
-
-}  
 
 int gainint(int *p,int min,int max)         
 
@@ -315,12 +255,6 @@ int main(){
     shell(E,num);
 
     printf("希尔排序:\n比较次数:%10d\t移动次数%10d\n\n",e+ee/3,ee);
-
-    GBPX(F,0,num-1,G);
-
-    printf("归并排序:\n比较次数:%10d\t移动次数%10d\n\n",f,ff);
-
-    printf("按任意键继续……");
 
 	getchar(); 
 
