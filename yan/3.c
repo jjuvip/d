@@ -10,7 +10,6 @@ void Insert(int A[],int n);
 void Bubble(int A[],int n);
 void Select(int A[],int n);  
 void Quick(int A[],int L,int R);
-//int GB(int S[],int L,int M,int R,int T[]);
 int change(int *x,int *y);
 void Insert(int A[],int n)
 {  
