@@ -9,17 +9,21 @@
 
 # define SR 1001
 
-void insort(int arr[],int n)
 
 
-//int main(int argc, char **argv)
-int main()
+
+//int insort(int arr[],int n)
+
+int insort()
 
 {
+
+
 	srand((int)time(NULL));
 	int arr[20];
 
 	int i,a,b,j,num;
+
 
 
 	for(int i = 0; i < 20; i++)
@@ -33,7 +37,12 @@ int main()
 
 //void InsertSort(int R[],int n)
 //int i,j;
-//	{	
+		
+
+}
+	int main(int arr[])
+	{
+	int i,a,b,j,num;
 	for(i=2,a++;i<=20;i++,a++)
 		if(arr[i]<arr[i-1])
 		{
@@ -42,18 +51,17 @@ int main()
 				arr[j=1]=arr[j];
 			arr[j=1]=arr[0];
 		}
-//	}
-
+	
+	
 	printf("请输入N [2,%d]:",N);
-
-	    insort(&num,2,N);
-
-	        for(i=0;i<num;i++)
-
-			     printf("%d\t",arr[i]=rand()%SR);
+		
+	insort(&num,2,N);
+	for(i=0;i<num;i++)
+		printf("%d\t",arr[i]=rand()%SR);
 
 	printf("\n直接插入排序:\n比较次数:%10d\t移动次数%10d\n\n",a,b);
 
-	getchar(); 
-	return 0; 
+//	getchar();
+	
+//	return 0; 
 }
