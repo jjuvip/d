@@ -1,297 +1,145 @@
-#include<stdio.h>
-#include<stdlib.h>
-/******************************宏定义**************************************/
-#define LEN sizeof(struct Queue)
-#define LENS sizeof(struct SqQueue)
-#define LEN1 sizeof(struct Stack)
-#define LEN1S sizeof(struct SqStack)
-#define INISIZE 3
-/******************************结构体定义*********************************/
-struct Queue{                        /*定义队列*/
-         int status;                     /*状态*/
-         int ord;                          /*编号*/
-         int time;                        /*时间*/
-         struct Queue *next;      /*下一个节点的地址*/
-};
-struct SqQueue{           /*定义指向队列的指针*/
-         struct Queue *head;     /*队头指针*/
-         struct Queue *end;       /*队尾指针*/
-};
-struct Stack{                          /*定义栈*/
-         int status;                     /*状态*/
-         int ord;                          /*编号*/
-         int time;                        /*时间*/
-};
-struct SqStack{            /*定义指向栈的指针*/
-         struct Stack *head;       /*栈头指针*/
-         struct Stack *end;         /*栈尾指针*/
-         int stacksize;                /*栈的大小*/
-};
-/*****************************队列函数声明********************************/
-int InitQueue(struct SqQueue *sq);                                     /*初始化队列，即构造头指针*/
-struct Queue InputQueue();                                                 /*输入临时变量*/
-int EnQueue(struct SqQueue *sq,struct Queue e);              /*入队操作*/
-void PrintQueue(struct SqQueue *h);                                  /*打印队列*/
-int QueueEmpty(struct SqQueue *p);                                 /*判断队列是否为空*/
-int GetQueueTop(struct SqQueue *p,struct Queue *q);     /*取得队头元素*/
-int QueueLocation(struct SqQueue *p);                              /*取得队列中的位置*/
-/******************************栈函数声明*********************************/
-int InitStack(struct SqStack *sq);                                        /*初始化栈，即构造头指针*/
-struct Stack InputStack();                                                             /*输入临时变量*/
-int EnStack(struct SqStack *sq,struct Stack e);                            /*入栈操作*/
-void PrintStack(struct SqStack *h);                                              /*打印栈*/
-int StackEmpty(struct SqStack *p);                                             /*判断栈是否为空*/
-int StackFull(struct SqStack *p);                                                  /*判断栈是否满*/
-int GetStackTop(struct SqStack *p,struct Stack *q);                   /*取得栈头元素*/
-int StackLocation(struct SqStack *p);                                           /*取得栈中的位置*/
-/******************************其他函数声明*******************************/
-void Exec(struct SqQueue *sq,struct SqStack *st,struct SqStack *st1,struct Queue temp);                                                                                                   /*操作*/
-void Operator1(struct SqQueue *sq,struct SqStack *st,struct Queue temp);
-void Operator2(struct SqQueue *sq,struct SqStack *st,struct SqStack *st1,struct Queue temp);
-/*********************************main()***********************************/
-void main()
+# include <stdio.h>
+# include <malloc.h>
+# include <stdlib.h>
+//# include <conio.h>
+# include <string.h>
+ 
+# define MAX_STOP 5
+# define MAX_PAVE 100
+ 
+typedef struct 
 {
-         struct Queue temp;                         /*定义临时变量*/
-         struct SqQueue *squeue;                /*定义队列*/
-         struct SqStack *sStack;                   /*定义栈一*/
-         struct SqStack *sStack1;                /*定义栈二*/
-         squeue=(struct SqQueue *)malloc(LENS);
-         sStack=(struct SqStack *)malloc(LENS);
-         sStack1=(struct SqStack *)malloc(LENS);
-         system("cls");
-         InitQueue(squeue);                                   /*初始化队列*/
-         InitStack(sStack);                                     /*初始化栈一*/
-         InitStack(sStack1);                                   /*初始化栈栈二*/
-         temp=InputQueue();                      /*输入*/
-         while(temp.status!=69)
-         {
-                   Exec(squeue,sStack,sStack1,temp);/*操作*/
-                   temp=InputQueue();                      /*输入*/
-         }
+	char plate[10];				//汽车牌照号码，定义为一个字符指针类型
+}CAR;
+ 
+typedef struct 
+{
+	CAR STOP[MAX_STOP];			//各汽车信息的存储空间
+	int top;					//用来指示栈顶位置的静态指针
+}STOPING;
+ 
+typedef struct 
+{
+	int count;					//用来指示队中的数据个数
+	CAR PAVE[MAX_PAVE];			//各汽车信息的存储空间
+	int front,rear;				//用来指示队头和队尾位置的静态指针
+}PAVEMENT;
+ 
+typedef struct 
+{
+	CAR HELP[MAX_STOP];		//各汽车信息的存储空间
+	int top;					//用来指示栈顶位置的静态指针
+}BUFFER;
+ 
+STOPING S;						
+PAVEMENT P;
+BUFFER B;
+char C[10];
+ 
+void stop_to_pave()					//车停入便道
+{
+	if(P.count > 0 && P.front == P.rear)		//队满判断
+		printf("便道已满,请下次再来;\n");
+	else	
+	{
+		strcpy(P.PAVE[P.rear].plate,C);	
+		P.rear = (P.rear + 1) % MAX_PAVE;		//队尾指示器加1
+		P.count ++;								//计数器加1
+		printf("牌照为%s的汽车停入便道上的%d位置;\n",C,P.rear);
+	}
 }
-/**********************************InitQueue*******************************/
-int InitQueue(struct SqQueue *sq)          /*初始化队列，,即构造头指针*/
+ 
+void car_come()						//车停入停车位
 {
-         sq->head=sq->end=(struct Queue *)malloc(LEN);             /*申请空间*/
-         if(!sq->head)
-                   return 0;
-         sq->head->next= NULL;                                                               /*将指针置空*/
-         return 1;
+	printf("请输入即将停车的车牌号: ");		//输入车牌号
+	scanf("%s",&C);
+	if(S.top >= MAX_STOP)			//如果停车位已满，停入便道
+		stop_to_pave();				//停车位 -> 便道 函数
+	else							//否则车停入停车位
+	{
+		strcpy(S.STOP[S.top].plate,C);			//将车牌号登记
+		S.top ++;								//停车位栈顶指针加1
+		printf("牌照为%s的汽车停入停车位的%d车位;\n",C,S.top);
+	}
+	return ;
 }
-/*********************************InputQueue******************************/
-struct Queue InputQueue()                                                                    /*输入临时变量*/
+ 
+void stop_to_buff()
 {
-         struct Queue temp;
-         printf("please input status order and time end of /'E/':");
-         scanf("%d%d%d",&(temp.status),&(temp.ord),&(temp.time));
-         return temp;
+	while(S.top > 0)		//停车位栈压入临时栈，为需要出栈的车辆让道
+	{
+		S.top--;
+		if(strcmp(S.STOP[S.top].plate,C) == 0)
+			break;
+		strcpy(B.HELP[B.top].plate,S.STOP[S.top].plate);
+		B.top++;
+		printf("牌照为%s的汽车暂时退出停车位;\n",S.STOP[S.top].plate);
+	}
+	if(S.top <= 0)					//如果停车位中的车都让了道，说明停车位中无车辆需要出行
+		printf("停车位上无此车消息.\n");
+	else							//否则则输出车辆号
+		printf("牌照为%s的汽车从停车场开走;\n",S.STOP[S.top].plate);
+	while(B.top > 0)				//将辅助栈中的车辆信息压入停车位栈
+	{
+		B.top --;
+		strcpy(S.STOP[S.top].plate,B.HELP[B.top].plate);
+		S.top ++;
+		printf("牌照为%s的汽车停回停车位%d车位;\n",B.HELP[B.top].plate,S.top);		
+	}
+	while(S.top < MAX_STOP)			//从便道中 -> 停车位
+	{
+		if(P.count == 0)			//判断队列是否为空
+			break;
+		else						//不为空，将便道中优先级高的车辆停入停车位
+		{
+			strcpy(S.STOP[S.top].plate,P.PAVE[P.front].plate);
+			S.top++;
+			printf("牌照为%s的汽车从便道进入停车位的%d车位;\n",P.PAVE[P.front].plate,S.top);
+			P.front = (P.front+1) % MAX_PAVE;
+			P.count --;
+		}
+	}
 }
-/*********************************EnQueue******************************/
-int EnQueue(struct SqQueue *sq,struct Queue e)                                 /*入队操作*/
+ 
+void car_leave()
 {
-         struct Queue *s,*p;
-         p=(struct Queue *)malloc(LEN);
-         *p=e;
-         if(QueueEmpty(sq))                                                                      /*是否为空队*/
-         {
-                   sq->head->next=p;
-                   p->next=NULL;
-                   sq->end=p;
-                   return 1;
-         }
-         else
-         {
-                   for(s=sq->head;s->next!=NULL;s=s->next);
-                   s->next=p;
-                   p->next = NULL;
-                   sq->end=p;
-                   return 1;
-         }
+	printf("请输入即将离开的车牌号: ");
+	scanf("%s",&C);
+	if(S.top <= 0)					//判断停车位是否有车辆信息
+		printf("车位已空,无车辆信息!\n");
+	else
+		stop_to_buff();
 }
-/********************************PrintQueue*******************************/
-void PrintQueue(struct SqQueue *h)       /*打印队列，程序编写时作为测试*/
+ 
+void welcome()						//主界面函数
 {
-         struct Queue *p;
-         p=h->head;
-         p=p->next;
-         do
-         {
-                   printf("%c %d %d/n",p->status,p->ord,p->time);
-                   p=p->next;
-         }while(p!=NULL);
+	printf("\n\n");
+	printf("\t**欢迎使用本程序**\n");
+	printf("\t本程序为停车场的模拟管理程序，有车到来时请按【C】键。\n");
+	printf("\t然后根据屏幕提示进行相关操作，有车要走时请按【L】键。\n");
+	printf("\t然后根据屏幕提示进行相关操作，要退出程序请按【Q】键。\n");
+	printf("\t请选择你要做的操作!\n\n\n");
+	return ;
 }
-/**********************************QueueEmpty****************************/
-int QueueEmpty(struct SqQueue *p)               /*判断队列是否为空*/
+ 
+int main()
 {
-         if(p->head->next==NULL)
-                   return 1;
-         else
-                   return 0;
-}
-/*********************************GetQueueTop*****************************/
-int GetQueueTop(struct SqQueue *p,struct Queue *q)                        /*取得队头元素*/
-{
-         struct Queue *tem;
-         tem=p->head;
-         if(p->head->next!=NULL)
-         {
-                   tem=tem->next;
-                   *q=*tem;
-                   p->head->next=p->head->next->next;
-                   free(tem);
-                   return 1;
-         }
-         else
-                   return 0;
-}
-/**********************取得入队元素队列中的位置***************************/
-int QueueLocation(struct SqQueue *p)
-{
-         int i=0;
-         struct Queue *q;
-         q=p->head;
-         while(q->next!=NULL)
-         {
-                   q=q->next;
-                   i++;
-         }
-         return i;
-}
-/**********************************InitStack********************************/
-int InitStack(struct SqStack *sq)             /*初始化栈，,即构造头指针*/
-{
-         sq->head=(struct Stack *)malloc(INISIZE*LEN1);            /*申请空间*/
-         if(!sq->head)
-                   return 0;
-         sq->end=sq->head;
-         sq->stacksize=INISIZE;
-         return 1;
-}
-/*********************************InputStack******************************/
-struct Stack InputStack()                                                                        /*输入临时变量，测试之用*/
-{
-         struct Stack temp;
-         printf("please input status order and time end of /'E/':");
-         scanf("%d%d%d",&(temp.status),&(temp.ord),&(temp.time));
-         return temp;
-}
-/*********************************EnStack*******************************/
-int EnStack(struct SqStack *sq,struct Stack e)                    /*入栈操作*/
-{
-         if(StackFull(sq)) return 0;
-         else
-                   *(sq->head)++=e;
-         return 1;
-}
-/********************************PrintStack******************************/
-void PrintStack(struct SqStack *h)                                                /*打印栈，测试之用*/
-{
-         struct SqStack *p;
-         int i=0;
-         p=h;
-         (p->head)--;
-         do
-         {
-                   printf("%c %d %d/n",p->head->status,p->head->ord,p->head->time);
-                   (p->head)--;
-                   i++;
-         }while(i<2);
-}
-/**********************************StackEmpty*****************************/
-int StackEmpty(struct SqStack *p)                  /*判断栈是否为空*/
-{
-         if((p->head-p->end)==0)
-                   return 1;
-         else
-                   return 0;
-}
-/*********************************StackFull******************************/
-int StackFull(struct SqStack *p)              /*判断栈是否满*/
-{
-         return ((p->head-p->end>=INISIZE)?1:0);
-}
-/*********************************GetStackTop*****************************/
-int GetStackTop(struct SqStack *p,struct Stack *q)                    /*取得栈头元素*/
-{
-         if(StackEmpty(p))
-                   return 0;
-         (p->head)--;
-         *q=*(p->head);
-         return 1;
-}
-/*********************************StackLocation****************************/
-int StackLocation(struct SqStack *p)
-{
-         return (p->head-p->end);
-}
-/**********************************Exec***********************************/
-void Exec(struct SqQueue *sq,struct SqStack *st,struct SqStack *st1,struct Queue temp)                                                               /*执行*/
-{
-         switch(temp.status)
-         {
-                   case 65:Operator1(sq,st,temp);break;
-                   case 68:Operator2(sq,st,st1,temp);break;
-         }
-}
-/*********************************Operator1******************************/
-void Operator1(struct SqQueue *sq,struct SqStack *st,struct Queue temp)
-{
-         struct Stack t;
-         if(QueueEmpty(sq))                       /*判断是否队列为空*/
-         {
-                   if(StackFull(st))                     /*判断是否栈满*/
-                   {
-                            EnQueue(sq,temp);                         /*入队*/
-                            printf("在Queue中的位置是：%d/n",QueueLocation(sq));
-                            /*PrintQueueOrd();      /*打印输出队列中的编号*/
-                   }
-                   else
-                   {
-                            t.ord=temp.ord;
-                            t.status=temp.status;
-                            t.time=temp.time;
-                            EnStack(st,t);      /*??*/
-                            printf("元素Stack中的位置是：%d/n",StackLocation(st));
-                            /*PrintStackOrd();        /*打印输出栈中编号*/
-                   }
-         }
-         else
-         {
-                   EnQueue(sq,temp);                                                                                                   /*入队*/
-                   printf("在Queue中的位置是：%d/n",QueueLocation(sq));               /*打印输出队列编号*/
-         }
-}
-/*********************************Operator2*****************************/
-void Operator2(struct SqQueue *sq,struct SqStack *st,struct SqStack *st1,struct Queue temp)
-{
-         struct Stack *q;
-         struct Queue *p;
-         q=(struct Stack *)malloc(LEN1);
-         p=(struct Queue *)malloc(LEN);
-         GetStackTop(st,q);
-         while(q->ord!=temp.ord)               /*取出栈顶元素与临时变量中的车牌号比较*/
-         {
-                   if(StackEmpty(st))
-                            break;
-                   EnStack(st1,*q);                    /*将出栈元素入栈二*/
-                   GetStackTop(st,q);                         /*栈一栈顶元素出栈*/
-         }
-         if(!(StackEmpty(st)))
-         {
-                   GetStackTop(st,q);                         /*取得满足条件的元素让其出栈*/
-                   printf("车辆%d停留时间是%d,费用是 %d./n",q->ord,temp.time-q->time,(temp.time-q->time)*5);
-         }
-         while(!(StackEmpty(st1)))             /*将栈二元素全部入栈一*/
-         {
-                   GetStackTop(st1,q);              /*出栈二入栈一*/
-                   EnStack(st,*q);
-         }
-         if(!(QueueEmpty(sq)))                            /*判断队列是否为空*/
-         {
-                   GetQueueTop(sq,p);             /*取得队头元素*/
-                   q->ord=p->ord;
-                   q->status=p->status;
-                   q->time=p->time;
-                   EnStack(st,*q);                      /*入栈一*/
-         }
+	char x,y;
+	S.top = 0 ;					//初始化“停车位栈”
+	B.top = 0;					//初始化“辅助栈”
+	P.rear = 0;					//初始化“便道队列
+	P.count = 0;
+	P.front = 0;
+	while(1)					//界面操作
+	{
+		system("cls");
+		welcome();
+		x = getch();
+		if(x == 'C' || x == 'c') car_come();
+		if(x == 'L' || x == 'l') car_leave();
+		if(x == 'Q' || x == 'q') break;
+		printf("按【Enter】键继续程序的运行。\n");	
+		y = getch();
+	}
+	return 0;
 }
