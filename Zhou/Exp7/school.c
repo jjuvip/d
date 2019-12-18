@@ -283,7 +283,7 @@ void Find(AdjMatrix G)
 }  
 void Display()  
 {   
-    printf("\n                                       九江学院电子工程学院迎新校园导游\n\n");  
+    printf("\n                                      九江学院电子工程学院迎新校园导游\n\n");  
     printf("                                                      \n");  
     printf("                                —————————————————————————————————————————————— \n\n");  
     printf("                                *            1.浏览校园全部主要地点          *\n\n");  
